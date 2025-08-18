@@ -126,13 +126,14 @@ QListWidget::item:selected {
         tb.addWidget(self.combo_tool)
 
         # Prompt dropdown (hidden unless Gemini)
-        self.lbl_prompt = QLabel("  Prompt: ") # Store label as instance variable
+        self.lbl_prompt = QLabel("  Prompt: ")  # Store label as instance variable
         tb.addWidget(self.lbl_prompt)
         self.combo_prompt = QComboBox()
         self.combo_prompt.setMinimumWidth(220)
         self._reload_prompt_combo()
-        self.combo_prompt.setVisible(False)  # ẩn mặc định
         tb.addWidget(self.combo_prompt)
+        # Ensure prompt controls are hidden until Gemini is selected
+        self._on_tool_changed(self.combo_tool.currentText())
 
         # Keep context checkbox
         self.chk_context = QCheckBox("Giữ ngữ cảnh")
