@@ -1,6 +1,19 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QToolBar, QAction, QFileDialog, QMessageBox, QComboBox, QCheckBox, QWidget, QLabel
 import os
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QStackedWidget,
+    QToolBar,
+    QAction,
+    QFileDialog,
+    QMessageBox,
+    QComboBox,
+    QCheckBox,
+    QWidget,
+    QLabel,
+    QInputDialog,
+)
 from PyQt5.QtCore import QSize
 from .ui.start_screen import StartScreen
 from .ui.editor_screen import EditorScreen
@@ -11,6 +24,7 @@ from .core.prompt_store import PromptStore
 from .core.settings import Settings
 from .core.ai_client import AIClient
 from .core.utils import parse_srt_to_text_blocks, split_txt_to_paragraphs
+from .core.image_fetcher import fetch_images
 
 
 class MainWindow(QMainWindow):
@@ -80,10 +94,22 @@ QListWidget::item:selected {
         act_save_as = QAction("Save As...", self); act_save_as.triggered.connect(self._action_save_as)
         act_close = QAction("Close Project", self); act_close.triggered.connect(self._action_close_project)
         act_import_images = QAction("Import Ảnh...", self); act_import_images.triggered.connect(self._action_import_images)
+        act_fetch_images = QAction("Lấy ảnh...", self); act_fetch_images.triggered.connect(self._action_fetch_images)
         act_import_text = QAction("Import Văn bản...", self); act_import_text.triggered.connect(self._action_import_text)
         act_export = QAction("Export...", self); act_export.triggered.connect(lambda: QMessageBox.information(self, "Export", "Stub Export"))
         act_exit = QAction("Exit", self); act_exit.triggered.connect(self.close)
-        for a in [act_new, act_open, act_save, act_save_as, act_close, act_import_images, act_import_text, act_export, act_exit]:
+        for a in [
+            act_new,
+            act_open,
+            act_save,
+            act_save_as,
+            act_close,
+            act_import_images,
+            act_fetch_images,
+            act_import_text,
+            act_export,
+            act_exit,
+        ]:
             m_file.addAction(a)
 
         # Edit
@@ -116,6 +142,8 @@ QListWidget::item:selected {
 
         act_import_images_tb = QAction("Import Ảnh", self); act_import_images_tb.triggered.connect(self._action_import_images)
         tb.addAction(act_import_images_tb)
+        act_fetch_images_tb = QAction("Lấy ảnh", self); act_fetch_images_tb.triggered.connect(self._action_fetch_images)
+        tb.addAction(act_fetch_images_tb)
 
         tb.addSeparator()
 
@@ -218,6 +246,28 @@ QListWidget::item:selected {
                 self.project_manager.add_row(image_path=f)
             self.editor_screen.load_from_manager()
             QMessageBox.information(self, "Import Ảnh", f"Đã nhập {len(files)} ảnh.")
+
+    def _action_fetch_images(self):
+        url, ok = QInputDialog.getText(self, "Lấy ảnh", "URL chương:")
+        if not ok or not url:
+            return
+        last_dir = Settings.get_last_dir("import_images")
+        out_dir = QFileDialog.getExistingDirectory(self, "Chọn thư mục lưu ảnh", last_dir)
+        if not out_dir:
+            return
+        Settings.set_last_dir("import_images", out_dir)
+        try:
+            files = fetch_images(url, out_dir)
+        except Exception as e:
+            QMessageBox.warning(self, "Lấy ảnh", str(e))
+            return
+        if files:
+            for f in files:
+                self.project_manager.add_row(image_path=f)
+            self.editor_screen.load_from_manager()
+            QMessageBox.information(self, "Lấy ảnh", f"Đã lấy {len(files)} ảnh.")
+        else:
+            QMessageBox.warning(self, "Lấy ảnh", "Không lấy được ảnh nào.")
 
     def _action_import_text(self):
         last_dir = Settings.get_last_dir("import_text")
