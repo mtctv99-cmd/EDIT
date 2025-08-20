@@ -1,5 +1,18 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedWidget, QToolBar, QAction, QFileDialog, QMessageBox, QComboBox, QCheckBox, QWidget, QLabel
+from pathlib import Path
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QStackedWidget,
+    QToolBar,
+    QAction,
+    QFileDialog,
+    QMessageBox,
+    QComboBox,
+    QCheckBox,
+    QWidget,
+    QLabel,
+)
 from PyQt5.QtCore import QSize
 from .ui.start_screen import StartScreen
 from .ui.editor_screen import EditorScreen
@@ -171,6 +184,10 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+    style_path = Path(__file__).resolve().parent / "resources" / "style.qss"
+    if style_path.exists():
+        with open(style_path) as f:
+            app.setStyleSheet(f.read())
     win = MainWindow()
     win.show()
     sys.exit(app.exec_())

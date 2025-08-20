@@ -1,0 +1,10 @@
+#titleLabel {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+#recentLabel {
+    font-size: 16px;
+    margin-top: 40px;
+}
