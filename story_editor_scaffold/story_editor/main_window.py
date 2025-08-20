@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
 
         act_save = QAction("Save", self); act_save.triggered.connect(self._action_save)
         tb.addAction(act_save)
+        tb.widgetForAction(act_save).setProperty("class", "primary-btn")
 
         tb.addSeparator()
 
@@ -98,6 +99,7 @@ class MainWindow(QMainWindow):
         act_run = QAction("Run", self)
         act_run.triggered.connect(self._action_run_stub)
         tb.addAction(act_run)
+        tb.widgetForAction(act_run).setProperty("class", "primary-btn")
 
     def _reload_prompt_combo(self):
         self.combo_prompt.clear()
@@ -171,6 +173,8 @@ class MainWindow(QMainWindow):
 
 def main():
     app = QApplication(sys.argv)
+    with open('story_editor/resources/style.qss') as f:
+        app.setStyleSheet(f.read())
     win = MainWindow()
     win.show()
     sys.exit(app.exec_())

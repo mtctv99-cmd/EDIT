@@ -11,21 +11,23 @@ class StartScreen(QWidget):
 
         title = QLabel("📖 Story Editor")
         title.setAlignment(Qt.AlignCenter)
-        title.setStyleSheet("font-size: 28px; font-weight: bold; margin-bottom: 30px;")
+        title.setProperty("class", "header-label")
         layout.addWidget(title)
 
         btn_new = QPushButton("➕ New Project")
         btn_new.setFixedSize(220, 60)
+        btn_new.setProperty("class", "primary-btn")
         btn_new.clicked.connect(lambda: self.host.open_editor(new=True))
         layout.addWidget(btn_new, alignment=Qt.AlignCenter)
 
         btn_open = QPushButton("📂 Open Project")
         btn_open.setFixedSize(220, 60)
+        btn_open.setProperty("class", "primary-btn")
         btn_open.clicked.connect(self.open_project)
         layout.addWidget(btn_open, alignment=Qt.AlignCenter)
 
         recent_label = QLabel("Recent Projects")
-        recent_label.setStyleSheet("font-size: 16px; margin-top: 40px;")
+        recent_label.setProperty("class", "section-label")
         layout.addWidget(recent_label, alignment=Qt.AlignCenter)
 
         self.recent_list = QListWidget()
