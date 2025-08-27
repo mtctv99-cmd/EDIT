@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>EDIT Jobs</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+</head>
+<body class="section">
+  <div class="container">
+    <h1 class="title">Jobs</h1>
+    <form hx-post="/jobs" hx-trigger="submit" hx-target="#jobs" hx-swap="beforeend" class="box">
+      <div class="field is-grouped">
+        <p class="control is-expanded">
+          <input class="input" type="url" name="source_url" placeholder="Video URL" required />
+        </p>
+        <p class="control">
+          <input class="input" type="text" name="show_name" placeholder="Show" required />
+        </p>
+        <p class="control">
+          <input class="input" type="number" name="episode" placeholder="Ep" required />
+        </p>
+        <p class="control">
+          <button class="button is-primary" type="submit">Add</button>
+        </p>
+      </div>
+    </form>
+    <div id="jobs">
+      {% for job in jobs %}
+        {% include 'job_row.html' %}
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

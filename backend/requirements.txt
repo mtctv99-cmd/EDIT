@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+pydantic-settings
+jinja2
+rq
+redis
+python-multipart
